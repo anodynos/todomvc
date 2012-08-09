@@ -33,10 +33,17 @@ define([
 			this.$footer = this.$('#footer');
 			this.$main = this.$('#main');
 
+			// cache of the todo views
+			// so that only one is created for each model
+			this.todoViewsCache = {};
+			// bind "this" for all functions
+			_.bindAll(this);
+
 			Todos.on( 'add', this.addAll, this );
 			Todos.on( 'reset', this.addAll, this );
 			Todos.on( 'change:completed', this.addAll, this );
 			Todos.on( 'all', this.render, this );
+
 			Todos.fetch();
 		},
 
@@ -67,10 +74,22 @@ define([
 			this.allCheckbox.checked = !remaining;
 		},
 
-		// Add a single todo item to the list by creating a view for it, and
+		// Add a single todo item to the list by creating or cache-retrieving a view for it, and
 		// appending its element to the `<ul>`.
 		addOne: function( todo ) {
-			var view = new TodoView({ model: todo });
+
+			var view;
+			if (this.todoViewsCache[todo.get("id")]) {
+				//retrieve the view from cache
+				view = this.todoViewsCache[todo.get("id")];
+				// not sure why events are de-delegated. Here we just re-delegate them
+				view.delegateEvents();
+			} else {
+				// create a new view & cache it
+				view = new TodoView({ model : todo });
+				this.todoViewsCache[todo.get("id")] = view;
+			}
+
 			$('#todo-list').append( view.render().el );
 		},
 
