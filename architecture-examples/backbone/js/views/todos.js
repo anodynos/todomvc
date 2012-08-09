@@ -34,8 +34,6 @@ $(function() {
 
 		// Re-render the titles of the todo item.
 		render: function() {
-//			console.log("todoView.render : " + this.model.get("id") );
-
 			this.$el.html( this.template( this.model.toJSON() ) );
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
 
