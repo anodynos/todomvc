@@ -30,19 +30,14 @@ $(function ($) {
 			this.input = this.$('#new-todo');
 			this.allCheckbox = this.$('#toggle-all')[0];
 
-			window.app.Todos.on('add', this.addAll, this);
+			window.app.Todos.on('add', this.addOne, this);
 			window.app.Todos.on('reset', this.addAll, this);
-			window.app.Todos.on('change:completed', this.addAll, this);
+			window.app.Todos.on('change:completed', this.filterOne, this);
+			window.app.Todos.on("filter", this.filterAll, this);
 			window.app.Todos.on('all', this.render, this);
 
 			this.$footer = this.$('#footer');
 			this.$main = this.$('#main');
-
-			// cache of the todo views
-			// so that only one is created for each model
-			this.todoViewsCache = {};
-			// bind "this" for all functions
-			_.bindAll(this);
 
 			app.Todos.fetch();
 		},
@@ -74,20 +69,12 @@ $(function ($) {
 			this.allCheckbox.checked = !remaining;
 		},
 
-		// Add a single todo item to the list by creating or cache-retrieving a view for it, and
+		// Add a single todo item to the list by creating a view for it, and
 		// appending its element to the `<ul>`.
 		addOne : function (todo) {
-			var view;
-			if (this.todoViewsCache[todo.get("id")]) {
-				//retrieve the view from cache
-				view = this.todoViewsCache[todo.get("id")];
-				// not sure why events are de-delegated. Here we just re-delegate them
-				view.delegateEvents();
-			} else {
-				// create a new view & cache it
-				view = new app.TodoView({ model : todo });
-				this.todoViewsCache[todo.get("id")] = view;
-			}
+			var view = new app.TodoView({ model : todo });
+			// store view in model (1-to-1 in this app), so we can manipulate the view from a model ref - eg. needed in filterOne()
+			todo.view = view;
 
 			$('#todo-list').append(view.render().el);
 		},
@@ -95,18 +82,15 @@ $(function ($) {
 		// Add all items in the **Todos** collection at once.
 		addAll : function () {
 			this.$('#todo-list').html('');
+			app.Todos.each(this.addOne, this);
+		},
 
-			switch (app.TodoFilter) {
-				case 'active':
-					_.each(app.Todos.remaining(), this.addOne);
-					break;
-				case 'completed':
-					_.each(app.Todos.completed(), this.addOne);
-					break;
-				default:
-					app.Todos.each(this.addOne, this);
-					break;
-			}
+		filterOne : function (todo) {
+			todo.view.toggleVisible();
+		},
+
+		filterAll : function () {
+			app.Todos.each(this.filterOne, this);
 		},
 
 		// Generate the attributes for a new Todo item.

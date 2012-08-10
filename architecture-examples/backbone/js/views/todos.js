@@ -33,12 +33,26 @@ $(function() {
 		},
 
 		// Re-render the titles of the todo item.
-		render: function() {
+		render : function () {
 			this.$el.html( this.template( this.model.toJSON() ) );
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
+			this.toggleVisible();
 
 			this.input = this.$('.edit');
 			return this;
+		},
+
+		toggleVisible : function () {
+			this.$el.toggleClass( 'hidden',  !this.isVisible());
+		},
+
+		isVisible : function () {
+			var isCompleted = this.model.get('completed');
+			return (
+				app.TodoFilter === ""
+				|| (isCompleted && app.TodoFilter === 'completed')
+				|| (!isCompleted && app.TodoFilter === 'active')
+			);
 		},
 
 		// Toggle the `"completed"` state of the model.

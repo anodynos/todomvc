@@ -33,9 +33,23 @@ define([
 		render: function() {
 			this.$el.html( this.template( this.model.toJSON() ) );
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
+			this.toggleVisible();
 
 			this.input = this.$('.edit');
 			return this;
+		},
+
+		toggleVisible : function () {
+			this.$el.toggleClass( 'hidden',  !this.isVisible());
+		},
+
+		isVisible : function () {
+			var isCompleted = this.model.get('completed');
+			return (
+				Common.TodoFilter === ""
+					|| (isCompleted && Common.TodoFilter === 'completed')
+					|| (!isCompleted && Common.TodoFilter === 'active')
+				);
 		},
 
 		// Toggle the `"completed"` state of the model.
