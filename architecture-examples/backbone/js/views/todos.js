@@ -34,9 +34,9 @@ $(function() {
 
 		// Re-render the titles of the todo item.
 		render: function() {
+			// this is a local-tests comment
 			this.$el.html( this.template( this.model.toJSON() ) );
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
-
 			this.input = this.$('.edit');
 			return this;
 		},
