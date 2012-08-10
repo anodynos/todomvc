@@ -38,6 +38,7 @@ $(function() {
 			this.$el.html( this.template( this.model.toJSON() ) );
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
 			this.input = this.$('.edit');
+			// another local-tests comment - now we want this on github
 			return this;
 		},
 
