@@ -30,16 +30,29 @@ $(function() {
 		initialize: function() {
 			this.model.on( 'change', this.render, this );
 			this.model.on( 'destroy', this.remove, this );
+			this.model.on( 'visible', this.toggleVisible, this );
 		},
 
 		// Re-render the titles of the todo item.
-		render: function() {
-			// this is a local-tests comment
+		render : function () {
 			this.$el.html( this.template( this.model.toJSON() ) );
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
+			this.toggleVisible();
 			this.input = this.$('.edit');
-			// another local-tests comment - now we want this on github
 			return this;
+		},
+
+		toggleVisible : function () {
+			this.$el.toggleClass( 'hidden',  !this.isVisible());
+		},
+
+		isVisible : function () {
+			var isCompleted = this.model.get('completed');
+			return (
+				app.TodoFilter === ""
+				|| (isCompleted && app.TodoFilter === 'completed')
+				|| (!isCompleted && app.TodoFilter === 'active')
+			);
 		},
 
 		// Toggle the `"completed"` state of the model.
