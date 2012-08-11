@@ -73,9 +73,6 @@ $(function ($) {
 		// appending its element to the `<ul>`.
 		addOne : function (todo) {
 			var view = new app.TodoView({ model : todo });
-			// store view in model (1-to-1 in this app), so we can manipulate the view from a model ref - eg. needed in filterOne()
-			todo.view = view;
-
 			$('#todo-list').append(view.render().el);
 		},
 
@@ -86,7 +83,7 @@ $(function ($) {
 		},
 
 		filterOne : function (todo) {
-			todo.view.toggleVisible();
+			todo.trigger("visible");
 		},
 
 		filterAll : function () {

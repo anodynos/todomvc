@@ -30,6 +30,7 @@ $(function() {
 		initialize: function() {
 			this.model.on( 'change', this.render, this );
 			this.model.on( 'destroy', this.remove, this );
+			this.model.on( 'visible', this.toggleVisible, this );
 		},
 
 		// Re-render the titles of the todo item.
@@ -37,7 +38,6 @@ $(function() {
 			this.$el.html( this.template( this.model.toJSON() ) );
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
 			this.toggleVisible();
-
 			this.input = this.$('.edit');
 			return this;
 		},
