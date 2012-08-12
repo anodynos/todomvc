@@ -4,8 +4,8 @@
 
   TodoViewModel = function(model) {
     var _this = this;
-    this.editing = ko.observable(false);
-    this.completed = kb.observable(model, {
+    this.isEditing = ko.observable(false);
+    this.isCompleted = kb.observable(model, {
       key: 'completed',
       read: (function() {
         return model.completed();
@@ -14,11 +14,12 @@
         return model.completed(completed);
       })
     }, this);
-    this.visible = ko.computed(function() {
+    this.isVisible = ko.computed(function() {
       switch (app.viewmodels.settings.list_filter_mode()) {
         case 'active':
           return !_this.completed();
         case 'completed':
+        case 'done':
           return _this.completed();
         default:
           return true;
@@ -44,13 +45,12 @@
     };
     this.onCheckEditBegin = function() {
       if (!_this.editing() && !_this.completed()) {
-	return _this.editing(true);
+        return _this.editing(true);
       }
     };
     this.onCheckEditEnd = function(view_model, event) {
       if ((event.keyCode === 13) || (event.type === 'blur')) {
-        $('.todo-input').blur();
-        return _this.editing(false);
+        return $('.todo-input').blur()(_this.editing(false));
       }
     };
     return this;
