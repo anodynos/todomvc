@@ -2,8 +2,10 @@
 (function() {
 
   define(["underscore", "backbone", "views/AppView", "routers/Router", "collections/TodosCollection"], function(_, Backbone, AppView, Router, TodosCollection) {
-    new AppView;
-    new Router;
+    var todos;
+    todos = new TodosCollection;
+    new AppView(todos);
+    new Router(todos);
     Backbone.history.start();
     return null;
   });

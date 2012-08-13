@@ -1,13 +1,13 @@
 define ["underscore", "backbone", "views/AppView", "routers/Router", "collections/TodosCollection"],
 (_, Backbone, AppView, Router, TodosCollection) ->
 
-	#todos = null; #new TodosCollection
+	todos = new TodosCollection
 
 	# Initialize the application view
-	new AppView
+	new AppView todos
 
 	# Initialize routing and start Backbone.history
-	new Router
+	new Router todos
 
 	Backbone.history.start()
 	null

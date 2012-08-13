@@ -5,7 +5,7 @@
 
   define(["underscore", "backbone", "backbone.localstorage", "models/TodoModel"], function(_, Backbone, Store, Todo) {
     var TodosCollection;
-    TodosCollection = (function(_super) {
+    return TodosCollection = (function(_super) {
 
       __extends(TodosCollection, _super);
 
@@ -42,7 +42,6 @@
       return TodosCollection;
 
     })(Backbone.Collection);
-    return new TodosCollection();
   });
 
 }).call(this);

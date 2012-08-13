@@ -4,13 +4,14 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(["jquery", "underscore", "backbone", "collections/TodosCollection", "views/TodoView", "text!../../templates/stats.html", "common"], function($, _, Backbone, Todos, TodoView, statsTemplate, Common) {
+  define(["jquery", "underscore", "backbone", "collections/TodosCollection", "views/TodoView", "text!../../templates/stats.html", "common"], function($, _, Backbone, _Todos, TodoView, statsTemplate, Common) {
     var AppView;
     return AppView = (function(_super) {
 
       __extends(AppView, _super);
 
-      function AppView() {
+      function AppView(todos) {
+        this.todos = todos;
         this.filterAll = __bind(this.filterAll, this);
 
         this.addAll = __bind(this.addAll, this);
@@ -18,6 +19,7 @@
         this.addOne = __bind(this.addOne, this);
 
         this.render = __bind(this.render, this);
+
         console.log("new AppView");
         AppView.__super__.constructor.apply(this, arguments);
       }
@@ -38,19 +40,19 @@
         this.$footer = this.$("#footer");
         this.$main = this.$("#main");
         this.todoViewsCache = {};
-        Todos.on("add", this.addOne);
-        Todos.on("reset", this.addAll);
-        Todos.on("change:completed", this.filterOne);
-        Todos.on("filter", this.filterAll);
-        Todos.on("all", this.render);
-        return Todos.fetch();
+        this.todos.on("add", this.addOne);
+        this.todos.on("reset", this.addAll);
+        this.todos.on("change:completed", this.filterOne);
+        this.todos.on("filter", this.filterAll);
+        this.todos.on("all", this.render);
+        return this.todos.fetch();
       };
 
       AppView.prototype.render = function() {
         var completedCount, remainingCount;
-        completedCount = Todos.completed().length;
-        remainingCount = Todos.remaining().length;
-        if (Todos.length) {
+        completedCount = this.todos.completed().length;
+        remainingCount = this.todos.remaining().length;
+        if (this.todos.length) {
           this.$main.show();
           this.$footer.show();
           this.$footer.html(this.template({
@@ -76,7 +78,7 @@
       AppView.prototype.addAll = function() {
         console.log("addAll");
         this.$("#todo-list").html("");
-        return Todos.each(this.addOne, this);
+        return this.todos.each(this.addOne, this);
       };
 
       AppView.prototype.filterOne = function(todo) {
@@ -84,13 +86,13 @@
       };
 
       AppView.prototype.filterAll = function() {
-        return Todos.each(this.filterOne, this);
+        return this.todos.each(this.filterOne, this);
       };
 
       AppView.prototype.newAttributes = function() {
         return {
           title: this.input.val().trim(),
-          order: Todos.nextOrder(),
+          order: this.todos.nextOrder(),
           completed: false,
           rating: 0
         };
@@ -100,12 +102,12 @@
         if (e.which !== Common.ENTER_KEY || !this.input.val().trim()) {
           return;
         }
-        Todos.create(this.newAttributes());
+        this.todos.create(this.newAttributes());
         return this.input.val("");
       };
 
       AppView.prototype.clearCompleted = function() {
-        _.each(Todos.completed(), function(todo) {
+        _.each(this.todos.completed(), function(todo) {
           return todo.destroy();
         });
         return false;
@@ -114,7 +116,7 @@
       AppView.prototype.toggleAllComplete = function() {
         var completed;
         completed = this.allCheckbox.checked;
-        return Todos.each(function(todo) {
+        return this.todos.each(function(todo) {
           return todo.save({
             completed: completed
           });

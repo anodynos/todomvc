@@ -1,4 +1,5 @@
 define ["underscore", "backbone"], (_, Backbone) ->
+
 	class TodoModel extends  Backbone.Model
 		constructor : ->
 			console.log("new TodoModel")

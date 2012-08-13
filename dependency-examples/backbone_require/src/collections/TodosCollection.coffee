@@ -30,6 +30,3 @@ define ["underscore", "backbone", "backbone.localstorage", "models/TodoModel"],
 		# Todos are sorted by their original insertion order.
 		comparator : (todo) ->
 			todo.get "order"
-
-	new TodosCollection();
-

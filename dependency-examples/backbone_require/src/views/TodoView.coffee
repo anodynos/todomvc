@@ -1,75 +1,76 @@
 define ["jquery", "wijrating", "underscore", "backbone", "text!../../templates/todos.html", "common"],
-	($, wijrating, _, Backbone, todosTemplate, Common) ->
-		class TodoView extends Backbone.View
-			constructor : ->
-				console.log("new TodoView")
-				super
+($, wijrating, _, Backbone, todosTemplate, Common) ->
 
-			tagName : "li"
+	class TodoView extends Backbone.View
+		constructor : ->
+			console.log("new TodoView")
+			super
 
-			template : _.template(todosTemplate)
+		tagName : "li"
 
-			# The DOM events specific to an item.
-			events :
-				"click .toggle" : "togglecompleted"
-				"dblclick label" : "edit"
-				"click .destroy" : "clear"
-				"keypress .edit" : "updateOnEnter"
-				"blur .edit" : "close"
-				"wijratingrated .rating": "rated"
+		template : _.template(todosTemplate)
 
-			# The TodoView listens for changes to its model, re-rendering. Since there's
-			# a one-to-one correspondence between a **Todo** and a **TodoView** in this
-			# app, we set a direct reference on the model for convenience.
-			initialize : ->
-				@model.on "change", @render
-				@model.on "destroy", @remove, @
-				@model.on "visible", @toggleVisible
+		# The DOM events specific to an item.
+		events :
+			"click .toggle" : "togglecompleted"
+			"dblclick label" : "edit"
+			"click .destroy" : "clear"
+			"keypress .edit" : "updateOnEnter"
+			"blur .edit" : "close"
+			"wijratingrated .rating": "rated"
 
-			# Re-render the titles of the todo item.
-			render : =>
-				console.log "TodoView.render:" + @model.get("id")
-				@$el.html @template(@model.toJSON())
-				@$el.toggleClass "completed", @model.get("completed")
-				@toggleVisible()
-#				@.$('.rating').wijrating({value : @.model.get("rating")});
-				@input = @$(".edit")
-				@
+		# The TodoView listens for changes to its model, re-rendering. Since there's
+		# a one-to-one correspondence between a **Todo** and a **TodoView** in this
+		# app, we set a direct reference on the model for convenience.
+		initialize : ->
+			@model.on "change", @render
+			@model.on "destroy", @remove, @
+			@model.on "visible", @toggleVisible
 
-			toggleVisible : =>
-				@$el.toggleClass "hidden", not @isVisible()
+		# Re-render the titles of the todo item.
+		render : =>
+			console.log "TodoView.render:" + @model.get("id")
+			@$el.html @template(@model.toJSON())
+			@$el.toggleClass "completed", @model.get("completed")
+			@toggleVisible()
+			@.$('.rating').wijrating({value : @.model.get("rating")});
+			@input = @$(".edit")
+			@
 
-			isVisible : ->
-				isCompleted = @model.get("completed")
-				Common.TodoFilter is "" or
-				(isCompleted and Common.TodoFilter is "completed") or
-				(not isCompleted and Common.TodoFilter is "active")
+		toggleVisible : =>
+			@$el.toggleClass "hidden", not @isVisible()
 
-			# Toggle the `"completed"` state of the model.
-			togglecompleted : ->
-				@model.toggle()
+		isVisible : ->
+			isCompleted = @model.get("completed")
+			Common.TodoFilter is "" or
+			(isCompleted and Common.TodoFilter is "completed") or
+			(not isCompleted and Common.TodoFilter is "active")
 
-			rated : (e, args) ->
-				this.model.save rating : args.value
+		# Toggle the `"completed"` state of the model.
+		togglecompleted : ->
+			@model.toggle()
 
-			# Switch this view into `"editing"` mode, displaying the input field.
-			edit : =>
-				@$el.addClass "editing"
-				@input.focus()
+		rated : (e, args) ->
+			this.model.save rating : args.value
 
-			# Close the `"editing"` mode, saving changes to the todo.
-			close : =>
-				value = @input.val().trim()
-				if value
-					@model.save title : value
-				else
-					@clear()
-				@$el.removeClass "editing"
+		# Switch this view into `"editing"` mode, displaying the input field.
+		edit : =>
+			@$el.addClass "editing"
+			@input.focus()
 
-			# If you hit `enter`, we're through editing the item.
-			updateOnEnter : (e) ->
-				@close()  if e.keyCode is Common.ENTER_KEY
+		# Close the `"editing"` mode, saving changes to the todo.
+		close : =>
+			value = @input.val().trim()
+			if value
+				@model.save title : value
+			else
+				@clear()
+			@$el.removeClass "editing"
 
-			# Remove the item, destroy the model from *localStorage* and delete its view.
-			clear : ->
-				@model.destroy()
+		# If you hit `enter`, we're through editing the item.
+		updateOnEnter : (e) ->
+			@close()  if e.keyCode is Common.ENTER_KEY
+
+		# Remove the item, destroy the model from *localStorage* and delete its view.
+		clear : ->
+			@model.destroy()
