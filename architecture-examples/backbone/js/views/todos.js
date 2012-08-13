@@ -21,7 +21,8 @@ $(function() {
 			'dblclick label':	'edit',
 			'click .destroy':	'clear',
 			'keypress .edit':	'updateOnEnter',
-			'blur .edit':		'close'
+			'blur .edit':		'close',
+			'wijratingrated .rating' : 'rated'
 		},
 
 		// The TodoView listens for changes to its model, re-rendering. Since there's
@@ -39,7 +40,12 @@ $(function() {
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
 			this.toggleVisible();
 			this.input = this.$('.edit');
+			this.$('.rating').wijrating({value : this.model.get("rating")});
 			return this;
+		},
+
+		rated : function (e, args) {
+			this.model.save({ rating : args.value});
 		},
 
 		toggleVisible : function () {
