@@ -2,7 +2,8 @@
 (function() {
 
   define(["jquery", "backbone", "collections/TodosCollection", "common"], function($, Backbone, Todos, Common) {
-    var Router;
+    var Router,
+      _this = this;
     return Router = Backbone.Router.extend({
       routes: {
         "*filter": "setFilter"

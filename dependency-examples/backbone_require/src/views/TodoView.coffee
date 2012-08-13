@@ -1,7 +1,12 @@
 define ["jquery", "wijrating", "underscore", "backbone", "text!../../templates/todos.html", "common"],
 	($, wijrating, _, Backbone, todosTemplate, Common) ->
-		TodoView = Backbone.View.extend(
+		class TodoView extends Backbone.View
+			constructor : ->
+				console.log("new TodoView")
+				super
+
 			tagName : "li"
+
 			template : _.template(todosTemplate)
 
 			# The DOM events specific to an item.
@@ -17,21 +22,21 @@ define ["jquery", "wijrating", "underscore", "backbone", "text!../../templates/t
 			# a one-to-one correspondence between a **Todo** and a **TodoView** in this
 			# app, we set a direct reference on the model for convenience.
 			initialize : ->
-				@model.on "change", @render, @
+				@model.on "change", @render
 				@model.on "destroy", @remove, @
-				@model.on "visible", @toggleVisible, @
+				@model.on "visible", @toggleVisible
 
 			# Re-render the titles of the todo item.
-			render : ->
+			render : =>
+				console.log "TodoView.render:" + @model.get("id")
 				@$el.html @template(@model.toJSON())
 				@$el.toggleClass "completed", @model.get("completed")
 				@toggleVisible()
-				@.$('.rating').wijrating({value : @.model.get("rating")});
-
+#				@.$('.rating').wijrating({value : @.model.get("rating")});
 				@input = @$(".edit")
 				@
 
-			toggleVisible : ->
+			toggleVisible : =>
 				@$el.toggleClass "hidden", not @isVisible()
 
 			isVisible : ->
@@ -48,12 +53,12 @@ define ["jquery", "wijrating", "underscore", "backbone", "text!../../templates/t
 				this.model.save rating : args.value
 
 			# Switch this view into `"editing"` mode, displaying the input field.
-			edit : ->
+			edit : =>
 				@$el.addClass "editing"
 				@input.focus()
 
 			# Close the `"editing"` mode, saving changes to the todo.
-			close : ->
+			close : =>
 				value = @input.val().trim()
 				if value
 					@model.save title : value
@@ -68,6 +73,3 @@ define ["jquery", "wijrating", "underscore", "backbone", "text!../../templates/t
 			# Remove the item, destroy the model from *localStorage* and delete its view.
 			clear : ->
 				@model.destroy()
-		)
-		TodoView
-
