@@ -46,6 +46,9 @@
         this.$el.html(this.template(this.model.toJSON()));
         this.$el.toggleClass("completed", this.model.get("completed"));
         this.toggleVisible();
+        this.$('.rating').wijrating({
+          value: this.model.get("rating")
+        });
         this.input = this.$(".edit");
         return this;
       };
