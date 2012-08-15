@@ -29,10 +29,6 @@ define ["jquery", "underscore", "backbone", "views/TodoView", "text!../../templa
 			@$footer = @$("#footer")
 			@$main = @$("#main")
 
-			# cache of the todo views
-			# so that only one is created for each model
-			@todoViewsCache = {}
-
 			@todos.on "add", @addOne
 			@todos.on "reset", @addAll
 			@todos.on "change:completed", @filterOne

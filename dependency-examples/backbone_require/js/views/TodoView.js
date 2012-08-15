@@ -54,13 +54,13 @@
       };
 
       TodoView.prototype.toggleVisible = function() {
-        return this.$el.toggleClass("hidden", !this.isVisible());
+        return this.$el.toggleClass("hidden", this.isHidden());
       };
 
-      TodoView.prototype.isVisible = function() {
+      TodoView.prototype.isHidden = function() {
         var isCompleted;
         isCompleted = this.model.get("completed");
-        return Common.TodoFilter === "" || (isCompleted && Common.TodoFilter === "completed") || (!isCompleted && Common.TodoFilter === "active");
+        return (!isCompleted && Common.TodoFilter === "completed") || (isCompleted && Common.TodoFilter === "active");
       };
 
       TodoView.prototype.togglecompleted = function() {

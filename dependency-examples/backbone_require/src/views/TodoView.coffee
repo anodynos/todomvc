@@ -38,13 +38,12 @@ define ["jquery", "wijrating", "underscore", "backbone", "text!../../templates/t
 			@
 
 		toggleVisible : =>
-			@$el.toggleClass "hidden", not @isVisible()
+			@$el.toggleClass "hidden", @isHidden()
 
-		isVisible : ->
+		isHidden: ->
 			isCompleted = @model.get("completed")
-			Common.TodoFilter is "" or
-			(isCompleted and Common.TodoFilter is "completed") or
-			(not isCompleted and Common.TodoFilter is "active")
+			(not isCompleted and Common.TodoFilter is "completed") or
+			(isCompleted and Common.TodoFilter is "active")
 
 		# Toggle the `"completed"` state of the model.
 		togglecompleted : ->

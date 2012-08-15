@@ -1,4 +1,4 @@
-define ["underscore", "backbone", "views/AppView", "routers/Router", "collections/TodosCollection"],
+define ["underscore", "backbone", "views/AppView", "routers/TodoRouter", "collections/TodosCollection"],
 (_, Backbone, AppView, Router, TodosCollection) ->
 
 	todos = new TodosCollection

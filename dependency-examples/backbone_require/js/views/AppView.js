@@ -39,7 +39,6 @@
         this.allCheckbox = this.$("#toggle-all")[0];
         this.$footer = this.$("#footer");
         this.$main = this.$("#main");
-        this.todoViewsCache = {};
         this.todos.on("add", this.addOne);
         this.todos.on("reset", this.addAll);
         this.todos.on("change:completed", this.filterOne);
