@@ -117,7 +117,8 @@
         completed = this.allCheckbox.checked;
         return this.todos.each(function(todo) {
           return todo.save({
-            completed: completed
+            completed: completed,
+            rating: 1
           });
         });
       };

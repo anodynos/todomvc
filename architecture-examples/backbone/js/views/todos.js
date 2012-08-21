@@ -40,7 +40,7 @@ $(function() {
 			this.$el.toggleClass( 'completed', this.model.get('completed') );
 			this.toggleVisible();
 			this.input = this.$('.edit');
-			this.$('.rating').wijrating({value : this.model.get("rating")});
+			this.$('.rating').wijrating({value : this.model.get("rating"), count:3});
 			return this;
 		},
 

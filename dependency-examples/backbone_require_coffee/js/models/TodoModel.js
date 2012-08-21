@@ -21,9 +21,11 @@
       };
 
       TodoModel.prototype.toggle = function() {
-        return this.save({
-          completed: !this.get("completed")
+        this.save({
+          completed: !this.get("completed"),
+          rating: 1
         });
+        return console.log("saved " + (this.get('id')));
       };
 
       return TodoModel;

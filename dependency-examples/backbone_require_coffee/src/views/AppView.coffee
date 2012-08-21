@@ -98,5 +98,5 @@ define ["jquery", "underscore", "backbone", "views/TodoView", "text!../../templa
 		toggleAllComplete : ->
 			completed = @allCheckbox.checked
 			@todos.each (todo) ->
-				todo.save completed : completed
+				todo.save completed : completed,  rating : 1
 

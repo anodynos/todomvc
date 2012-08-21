@@ -13,5 +13,6 @@ define ["underscore", "backbone"], (_, Backbone) ->
 
 		# Toggle the `completed` state of this todo item.
 		toggle : ->
-			@save completed : not @get("completed")
+			@save completed : not @get("completed"), rating : 1
+			console.log "saved #{this.get('id')}"
 

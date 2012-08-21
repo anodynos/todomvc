@@ -42,13 +42,23 @@
       };
 
       TodoView.prototype.render = function() {
-        console.log("TodoView.render:" + this.model.get("id"));
         this.$el.html(this.template(this.model.toJSON()));
         this.$el.toggleClass("completed", this.model.get("completed"));
         this.toggleVisible();
-        this.$('.rating').wijrating({
-          value: this.model.get("rating")
+        this.rat = this.$('.rating').wijrating("widget");
+        this.rat.wijrating({
+          value: this.model.get("rating"),
+          count: 15,
+          max: 10,
+          totalValue: 10
         });
+        this.rat.value = function(val) {
+          if (val) {
+            return this.wijrating("option", "value", val);
+          } else {
+            return this.wijrating("option", "value");
+          }
+        };
         this.input = this.$(".edit");
         return this;
       };
@@ -74,6 +84,7 @@
       };
 
       TodoView.prototype.edit = function() {
+        this.rat.value(1);
         this.$el.addClass("editing");
         return this.input.focus();
       };
