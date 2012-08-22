@@ -45,6 +45,10 @@
       return this;
     };
 
+    TodoCollection.prototype.comparator = function(todo) {
+      return (todo.get('title')).length;
+    };
+
     return TodoCollection;
 
   })(Backbone.Collection);

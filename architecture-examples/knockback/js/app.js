@@ -5,7 +5,9 @@
     var todos;
     ko.bindingHandlers.dblclick = {
       init: function(element, value_accessor) {
-        return $(element).dblclick(ko.utils.unwrapObservable(value_accessor()));
+        return $(element).on("dblclick", function() {
+          return ko.utils.unwrapObservable(value_accessor());
+        });
       }
     };
     ko.bindingHandlers.block = {

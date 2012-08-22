@@ -10,7 +10,7 @@ class window.TodoCollection extends Backbone.Collection
 		return @models.length - @completedCount()
 
 	completeAll: (completed) ->
-		@each((todo) -> todo.completed(completed))
+		@each (todo) -> todo.completed(completed)
 		@
 
 	destroyCompleted: ->
@@ -19,3 +19,6 @@ class window.TodoCollection extends Backbone.Collection
 
 		_.each(completed_tasks, (t) -> t.destroy())
 		@
+
+	comparator: (todo) ->
+		(todo.get 'title').length
